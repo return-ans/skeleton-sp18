@@ -122,29 +122,5 @@ public class Planet {
 	public void draw() {
 	    StdDraw.picture(this.xxPos, this.yyPos, "images/"+this.imgFileName);
 	}
-	
-
-	
-	public static void main(String[] args) {
-		double ax=0.0,ay=0.0,axv=3.0,ayv=5.0,am=1.0;
-		String aimg="";
-		//double bx=0.0,by=0.0,bxv=0.0,byv=0.0,bm=0.0;
-		//String bimg="";
-		
-		Planet a=new Planet(ax, ay, axv ,ayv, am,aimg);
-		//Planet b=new Planet(bx, by, byv ,byv, bm,bimg);
-		System.out.println("ax="+a.xxPos);
-		System.out.println("ay="+a.yyPos);
-		System.out.println("avx="+a.xxVel);
-		System.out.println("avy="+a.yyVel);
-		System.out.println();
-		a.update(1.0, -5.0, -2.0);
-		System.out.println("ax="+a.xxPos);
-		System.out.println("ay="+a.yyPos);
-		System.out.println("avx="+a.xxVel);
-		System.out.println("avy="+a.yyVel);
-		
-		
-	}
 
 }
