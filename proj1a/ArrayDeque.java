@@ -18,7 +18,7 @@ public class ArrayDeque<T> {
 
     public ArrayDeque() {
         //May resize these arrays if add too many items
-        capacity = 4;
+        capacity = 16;
         FACTOR = 2;
         //As for generic array, use Object
         items = (T[]) new Object[capacity];
@@ -52,21 +52,27 @@ public class ArrayDeque<T> {
      * firstIdx and lastIdx should update after revising
      * Resize down after removals to save memory
      */
-    private void resize(int capacity) {
-        T[] a = (T[]) new Object[capacity];
+    private void resize(int cap, boolean flag) {
+        T[] a = (T[]) new Object[cap];
         if (lastIdx > firstIdx) {
             /* [firstIdx x x x x x x x x x lastIdx] */
             System.arraycopy(items, firstIdx, a, 0, size);
-        } else {
+            /* lastIdx may shift after resizing down */
+            if (flag == false) {
+                lastIdx = cap - size;
+            }
+        }
+        else {
             /* [x x x x x lastIdx o o o o firstIdx x x x x x x]
-             * firstIdx should update
+             * firstIdx should update either up or down
              */
             int leftNum = lastIdx + 1;
             int rightNum = size - leftNum;
             System.arraycopy(items, 0, a, 0, leftNum);
-            System.arraycopy(items, firstIdx, a, capacity - rightNum, rightNum);
+            System.arraycopy(items, firstIdx, a, cap - rightNum, rightNum);
             /* firstIdx should change after resizing */
-            firstIdx = capacity - rightNum;
+            firstIdx = cap - rightNum;
+            capacity = cap;
         }
         items = a;
     }
@@ -79,7 +85,7 @@ public class ArrayDeque<T> {
         }
         if (size == capacity) {
             int newCapacity = capacity * FACTOR;
-            resize(newCapacity);
+            resize(newCapacity, true);
             capacity = newCapacity;
         }
         //move the firstIdx if not full
@@ -101,7 +107,7 @@ public class ArrayDeque<T> {
         }
         if (size == capacity) {
             int newCapacity = capacity * FACTOR;
-            resize(newCapacity);
+            resize(newCapacity, true);
             capacity = newCapacity;
         }
         lastIdx++;
@@ -129,12 +135,17 @@ public class ArrayDeque<T> {
             firstIdx %= capacity;
         }
         size--;
-        //if (size * 2 < capacity - 1) resize(capacity / 2);
+        if (size * 2 < capacity - 1) {
+            resize(capacity / 2, false);
+            //lastIdx may have to shift after size's shrinking
+        }
         return ret;
     }
 
     public T removeLast() {
-        if (size == 0) return null;
+        if (size == 0) {
+            return null;
+        }
         T ret = items[lastIdx];
         /* If the size just is one, just make null the item,
             do not need to shift the pointer
@@ -146,7 +157,10 @@ public class ArrayDeque<T> {
             }
         }
         size--;
-        //if (size * 2 < capacity - 1) resize(capacity / 2);
+        if (size * 2 < capacity - 1) {
+            resize(capacity / 2, false);
+            //lastIdx may have to shift after size's shrinking
+        }
         return ret;
     }
 
@@ -155,7 +169,9 @@ public class ArrayDeque<T> {
         int tmp = firstIdx;
         for (int i = 0; i < size; i++) {
             System.out.print(items[tmp]);
-            if (i != size - 1) System.out.print(" ");
+            if (i != size - 1) {
+                System.out.print(" ");
+            }
             tmp++;
             tmp %= capacity;
             //mod the capacity to circulate in the array

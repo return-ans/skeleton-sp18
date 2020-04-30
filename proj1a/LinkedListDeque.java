@@ -43,8 +43,8 @@ public class LinkedListDeque<T> {
         return size;
     }
 
-    public void addFirst(T item) {
-        ListNode tmp = new ListNode(item);
+    public void addFirst(T it) {
+        ListNode tmp = new ListNode(it);
         tmp.next = head.next;
         tmp.prev = head;
         tmp.next.prev = tmp;
@@ -52,8 +52,8 @@ public class LinkedListDeque<T> {
         size++;
     }
 
-    public void addLast(T item) {
-        ListNode tmp = new ListNode(item);
+    public void addLast(T it) {
+        ListNode tmp = new ListNode(it);
         tmp.next = tail;
         tmp.prev = tail.prev;
         tmp.prev.next = tmp;
@@ -68,7 +68,9 @@ public class LinkedListDeque<T> {
         ListNode tmp = head.next;
         for (int i = 0; i < size; i++) {
             System.out.print(tmp.item);
-            if (i != size - 1) System.out.print(" ");
+            if (i != size - 1) {
+                System.out.print(" ");
+            }
             tmp = tmp.next;
         }
     }
