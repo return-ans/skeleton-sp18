@@ -6,9 +6,9 @@ public class LinkedListDeque<T> {
      * create a ListNode class in LinkedListDeque class
      */
     private class ListNode{
-        private T item;
-        private ListNode prev;
-        private ListNode next;
+        public T item;
+        public ListNode prev;
+        public ListNode next;
 
         //Constructor of a ListNode
         public ListNode(T item){
@@ -25,12 +25,11 @@ public class LinkedListDeque<T> {
     private T item;
     private ListNode head;
     private ListNode tail;
-    LinkedListDeque<T> next;
 
     /**
      * Create two sentinel nodes, and point to each other at first
      */
-    private LinkedListDeque(){
+    public LinkedListDeque(){
         this.size=0;
         this.head=new ListNode(null);
         this.tail=new ListNode(null);
@@ -106,38 +105,26 @@ public class LinkedListDeque<T> {
     }
 
     public T get(int index){
-        if(size==0||size<index+1) return null;
-        ListNode tmp=head.next;
-        for(int i=0;i<index;i++){
-            tmp=tmp.next;
+        if(size == 0 || size < index + 1) return null;
+        ListNode tmp = head.next;
+        for(int i = 0 ; i < index ; i++){
+            tmp = tmp.next;
         }
         return tmp.item;
     }
 
-    private T rec(ListNode L,int idx){
-        if(idx==0){
+    private T rec(ListNode L, int idx){
+        if(idx == 0){
             return L.item;
         }
-        return rec(L.next,idx-1);
+        return rec(L.next, idx - 1);
     }
 
     public T getRecursive(int index){
-        if(size==0||size>index+1) return null;
-        ListNode tmp=head;
+        if(size == 0 || size > index + 1) return null;
+        ListNode tmp = head;
         return rec(head,index);
     }
-
-//    public static void main(String args[]){
-//        LinkedListDeque<Integer> lld=new LinkedListDeque<Integer>();
-//        boolean checkEmpty=lld.isEmpty();
-//
-//        lld.addFirst(10);
-//        lld.addFirst(9);
-//        lld.addLast(8);
-//        int checkSize=lld.size();
-//        lld.removeFirst();
-//        int Get=lld.get(1);
-//    }
 
 
 }
