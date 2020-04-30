@@ -5,16 +5,16 @@ public class LinkedListDeque<T> {
     /**
      * create a ListNode class in LinkedListDeque class
      */
-    public class ListNode{
-        public T item;
-        public ListNode prev;
-        public ListNode next;
+    private class ListNode{
+        private T item;
+        private ListNode prev;
+        private ListNode next;
 
         //Constructor of a ListNode
         public ListNode(T item){
-            this.item=item;
-            this.prev=null;
-            this.next=null;
+            this.item = item;
+            this.prev = null;
+            this.next = null;
         }
     }
 
@@ -30,16 +30,16 @@ public class LinkedListDeque<T> {
     /**
      * Create two sentinel nodes, and point to each other at first
      */
-    public LinkedListDeque(){
+    private LinkedListDeque(){
         this.size=0;
         this.head=new ListNode(null);
         this.tail=new ListNode(null);
-        this.head.next=this.tail;
-        this.tail.prev=this.head;
+        this.head.next = this.tail;
+        this.tail.prev = this.head;
     }
 
     public boolean isEmpty(){
-        if(this.size==0) return true;
+        if(this.size == 0) return true;
         else return false;
     }
 
@@ -52,11 +52,11 @@ public class LinkedListDeque<T> {
      * @param item
      */
     public void addFirst(T item){
-        ListNode tmp=new ListNode(item);
-        tmp.next=head.next;
-        tmp.prev=head;
-        tmp.next.prev=tmp;
-        head.next=tmp;
+        ListNode tmp = new ListNode(item);
+        tmp.next = head.next;
+        tmp.prev = head;
+        tmp.next.prev = tmp;
+        head.next = tmp;
         size++;
     }
 
@@ -65,11 +65,11 @@ public class LinkedListDeque<T> {
      * @param item
      */
     public void addLast(T item){
-        ListNode tmp=new ListNode(item);
-        tmp.next=tail;
-        tmp.prev=tail.prev;
-        tmp.prev.next=tmp;
-        tail.prev=tmp;
+        ListNode tmp = new ListNode(item);
+        tmp.next = tail;
+        tmp.prev = tail.prev;
+        tmp.prev.next = tmp;
+        tail.prev = tmp;
         size++;
     }
 
