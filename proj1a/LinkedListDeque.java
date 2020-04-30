@@ -1,14 +1,12 @@
-import java.util.List;
-
 public class LinkedListDeque<T> {
 
     /**
      * create a ListNode class in LinkedListDeque class
      */
     private class ListNode {
-        public T item;
-        public ListNode prev;
-        public ListNode next;
+        private T item;
+        private ListNode prev;
+        private ListNode next;
 
         //Constructor of a ListNode
         public ListNode(T item) {
@@ -64,7 +62,9 @@ public class LinkedListDeque<T> {
     }
 
     public void printDeque() {
-        if (size == 0) return;
+        if (size == 0) {
+            return;
+        }
         ListNode tmp = head.next;
         for (int i = 0; i < size; i++) {
             System.out.print(tmp.item);
@@ -74,7 +74,9 @@ public class LinkedListDeque<T> {
     }
 
     public T removeFirst() {
-        if (size == 0) return null;
+        if (size == 0) {
+            return null;
+        }
         ListNode tmp = head.next;
         T ret = tmp.item;
         tmp.next.prev = head;
@@ -85,7 +87,9 @@ public class LinkedListDeque<T> {
     }
 
     public T removeLast() {
-        if (size == 0) return null;
+        if (size == 0) {
+            return null;
+        }
         ListNode tmp = tail.prev;
         T ret = tmp.item;
         tmp.prev.next = tail;
@@ -97,7 +101,9 @@ public class LinkedListDeque<T> {
     }
 
     public T get(int index) {
-        if (size == 0 || size < index + 1) return null;
+        if (size == 0 || size < index + 1) {
+            return null;
+        }
         ListNode tmp = head.next;
         /* Beginning at the first item */
         for (int i = 0; i < index; i++) {
@@ -114,7 +120,9 @@ public class LinkedListDeque<T> {
     }
 
     public T getRecursive(int index) {
-        if (size == 0 || size < index + 1) return null;
+        if (size == 0 || size < index + 1) {
+            return null;
+        }
         ListNode tmp = head.next;
         return rec(tmp, index);
     }

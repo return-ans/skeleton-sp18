@@ -11,8 +11,8 @@ public class ArrayDeque<T> {
     /**
      * two pointers circulate int the array
      */
-    private int firstIdx;// <----
-    private int lastIdx;// ---->
+    private int firstIdx; // <----
+    private int lastIdx; // ---->
     private int FACTOR;
     private T[] items;
 
@@ -24,8 +24,8 @@ public class ArrayDeque<T> {
         items = (T[]) new Object[capacity];
         size = 0;
         //two sentinels begin at the mid of the array
-        firstIdx = capacity / 2;//first sentinel set before the first item
-        lastIdx = capacity / 2;//last sentinel set after the last item
+        firstIdx = capacity / 2; //first sentinel set before the first item
+        lastIdx = capacity / 2; //last sentinel set after the last item
     }
 
     public int size() {
@@ -37,7 +37,9 @@ public class ArrayDeque<T> {
     }
 
     public T get(int index) {
-        if (size == 0 || size < index + 1) return null;
+        if (size == 0 || size < index + 1) {
+            return null;
+        }
         int tmp = firstIdx;
         for (int i = 0; i < index; i++) {
             tmp++;
@@ -59,8 +61,8 @@ public class ArrayDeque<T> {
             /* [x x x x x lastIdx o o o o firstIdx x x x x x x]
              * firstIdx should update
              */
-            int leftNum = lastIdx + 1;//6
-            int rightNum = size - leftNum;//7 cap=17
+            int leftNum = lastIdx + 1;
+            int rightNum = size - leftNum;
             System.arraycopy(items, 0, a, 0, leftNum);
             System.arraycopy(items, firstIdx, a, capacity - rightNum, rightNum);
             /* firstIdx should change after resizing */
@@ -83,7 +85,8 @@ public class ArrayDeque<T> {
         //move the firstIdx if not full
         if (firstIdx > 0) {
             firstIdx--;
-        } else if (firstIdx == 0) {
+        }
+        else if (firstIdx == 0) {
             firstIdx = capacity - 1;
         }
         items[firstIdx] = item;
@@ -113,7 +116,9 @@ public class ArrayDeque<T> {
      * @return
      */
     public T removeFirst() {
-        if (size == 0) return null;
+        if (size == 0) {
+            return null;
+        }
         T ret = items[firstIdx];
         items[firstIdx] = null;
         /* If the size just is one, just make null the item,
@@ -124,7 +129,7 @@ public class ArrayDeque<T> {
             firstIdx %= capacity;
         }
         size--;
-        if (size * 2 < capacity - 1) resize(capacity / 2);
+        //if (size * 2 < capacity - 1) resize(capacity / 2);
         return ret;
     }
 
@@ -141,7 +146,7 @@ public class ArrayDeque<T> {
             }
         }
         size--;
-        if (size * 2 < capacity - 1) resize(capacity / 2);
+        //if (size * 2 < capacity - 1) resize(capacity / 2);
         return ret;
     }
 
