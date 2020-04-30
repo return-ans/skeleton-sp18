@@ -30,26 +30,19 @@ public class LinkedListDeque<T> {
      * Create two sentinel nodes, and point to each other at first
      */
     public LinkedListDeque(){
-        this.size=0;
-        this.head=new ListNode(null);
-        this.tail=new ListNode(null);
-        this.head.next = this.tail;
-        this.tail.prev = this.head;
+        size=0;
+        head=new ListNode(null);
+        tail=new ListNode(null);
+        head.next = tail;
+        tail.prev = head;
     }
 
-    public boolean isEmpty(){
-        if(this.size == 0) return true;
-        else return false;
-    }
+    public boolean isEmpty(){ return size==0; }
 
     public int size(){
-        return this.size;
+        return size;
     }
 
-    /**
-     * insert a ListNode after head
-     * @param item
-     */
     public void addFirst(T item){
         ListNode tmp = new ListNode(item);
         tmp.next = head.next;
@@ -59,10 +52,6 @@ public class LinkedListDeque<T> {
         size++;
     }
 
-    /**
-     * insert a ListNode before tail
-     * @param item
-     */
     public void addLast(T item){
         ListNode tmp = new ListNode(item);
         tmp.next = tail;
@@ -77,7 +66,7 @@ public class LinkedListDeque<T> {
         ListNode tmp=head.next;
         for(int i=0;i<size;i++){
             System.out.print(tmp.item);
-            if(i!=size-1) System.out.print(" ");
+            if(i!=size-1)  System.out.print(" ");
             tmp=tmp.next;
         }
     }
@@ -85,28 +74,30 @@ public class LinkedListDeque<T> {
     public T removeFirst(){
         if(size==0) return null;
         ListNode tmp=head.next;
+        T ret=tmp.item;
         tmp.next.prev=head;
         head.next=tmp.next;
-        tmp.next=null;
-        tmp.prev=null;
+        tmp=null;
         size--;
-        return tmp.item;
+        return ret;
     }
 
     public T removeLast(){
         if(size==0) return null;
         ListNode tmp=tail.prev;
+        T ret=tmp.item;
         tmp.prev.next=tail;
         tail.prev=tmp.prev;
-        tmp.next=null;
-        tmp.prev=null;
+        /* make null after removal */
+        tmp=null;
         size--;
-        return tmp.item;
+        return ret;
     }
 
     public T get(int index){
         if(size == 0 || size < index + 1) return null;
         ListNode tmp = head.next;
+        /* Beginning at the first item */
         for(int i = 0 ; i < index ; i++){
             tmp = tmp.next;
         }
@@ -121,9 +112,9 @@ public class LinkedListDeque<T> {
     }
 
     public T getRecursive(int index){
-        if(size == 0 || size > index + 1) return null;
-        ListNode tmp = head;
-        return rec(head,index);
+        if(size == 0 || size < index + 1) return null;
+        ListNode tmp = head.next;
+        return rec(tmp,index);
     }
 
 

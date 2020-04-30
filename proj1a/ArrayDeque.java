@@ -3,7 +3,8 @@ public class ArrayDeque<T> {
     /**
      * One array, two pointers
      * Make a circle in one array,
-     * if firstIdx has no space in the front of the array, add first begin in (capacity-1), then firstIdx>lastIdx
+     * if firstIdx has no space in the front of the array,
+     * add first begin in (capacity-1), then firstIdx>lastIdx
      */
     private int capacity; //initial a capacity
     private int size;
@@ -31,10 +32,7 @@ public class ArrayDeque<T> {
         return size;
     }
 
-    public boolean isEmpty(){
-        if(size==0) return true;
-        else return false;
-    }
+    public boolean isEmpty(){ return size==0; }
 
     public T get(int index){
         if(size==0||size<index+1) return null;
@@ -47,9 +45,8 @@ public class ArrayDeque<T> {
     }
 
     /**
-     * resize the array with FACTOR*capacity
-     * And the firstIdx and lastIdx should update after revising
-     * @param capacity
+     * firstIdx and lastIdx should update after revising
+     * Resize down after removals to save memory
      */
     private void resize(int capacity){
         T[] a=(T[]) new Object[capacity];
@@ -68,7 +65,6 @@ public class ArrayDeque<T> {
             firstIdx=capacity-rightNum;
         }
         items=a;
-
     }
 
     public void addFirst(T item){
@@ -110,11 +106,21 @@ public class ArrayDeque<T> {
         size++;
     }
 
+    /**
+     * It should make null after removing an item
+     * @return
+     */
     public T removeFirst(){
         if(size==0) return null;
         T ret=items[firstIdx];
-        firstIdx++;
-        firstIdx%=capacity;
+        items[firstIdx] = null;
+        /* If the size just is one, just make null the item,
+            do not need to shift the pointer
+         */
+        if(size>1){
+            firstIdx++;
+            firstIdx%=capacity;
+        }
         size--;
         return ret;
     }
@@ -122,9 +128,14 @@ public class ArrayDeque<T> {
     public T removeLast(){
         if(size==0) return null;
         T ret=items[lastIdx];
-        lastIdx--;
-        if(lastIdx==-1){
-            lastIdx=capacity-1;
+        /* If the size just is one, just make null the item,
+            do not need to shift the pointer
+         */
+        if(size>1){
+            lastIdx--;
+            if(lastIdx==-1){
+                lastIdx=capacity-1;
+            }
         }
         size--;
         return ret;
@@ -142,35 +153,17 @@ public class ArrayDeque<T> {
         }
     }
 
-//    public static void main(String args[]){
-//        ArrayDeque<Integer> adq=new ArrayDeque<Integer>();
-//        boolean checkEmpty=adq.isEmpty();
-//        int checkSize=adq.size();
-//        int Get;
-//        adq.addFirst(10);
-//        Get=adq.get(0);
-//        adq.addFirst(9);
-//        adq.addFirst(1);
-//        adq.addFirst(2);
-//        Get=adq.get(1);
-//        adq.addFirst(3);
-//        adq.removeFirst();
-//        adq.addFirst(92);
-//        checkSize=adq.size();
-//        adq.removeLast();
-//        checkSize=adq.size();
-//        adq.addFirst(12);
-//        adq.addLast(8);
-//        Get=adq.get(4);
-//        adq.addLast(4);
-//        checkSize=adq.size();
-//        adq.addFirst(9);
-//        adq.addLast(5);
-//        adq.addLast(8);
-//
-//        adq.removeFirst();
-//
-//    }
+    public static void main(String args[]){
+        ArrayDeque<Integer> adq=new ArrayDeque<Integer>();
+        for(int i=0;i<20;i++){
+            adq.addFirst(i);
+            adq.addLast(i);
+            if(i%5==0) adq.removeFirst();
+            adq.printDeque();
+            System.out.println();
+        }
+
+    }
 
 
 
