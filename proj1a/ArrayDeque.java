@@ -49,7 +49,7 @@ public class ArrayDeque<T> {
     }
 
     /**
-     * Both firstIdx and lastIdx should update after revising
+     * Both firstIdx and lastIdx should update after revising!!!!
      * Resize down after removals to save memory
      */
     private void resize(int cap, boolean flag) {
@@ -58,8 +58,8 @@ public class ArrayDeque<T> {
             /* [firstIdx x x x x x x x x x lastIdx] */
             System.arraycopy(items, firstIdx, a, 0, size);
             /* Start from index 0 */
-            firstIdx=0;
-            lastIdx=size-1;
+            firstIdx = 0;
+            lastIdx = size - 1;
 
         } else {
             /* [x x x x x lastIdx o o o o firstIdx x x x x x x]
@@ -142,6 +142,7 @@ public class ArrayDeque<T> {
 
     /**
      * Should maintain a mininum size of the array
+     *
      * @return
      */
     public T removeLast() {
