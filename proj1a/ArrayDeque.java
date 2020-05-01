@@ -49,7 +49,7 @@ public class ArrayDeque<T> {
     }
 
     /**
-     * firstIdx and lastIdx should update after revising
+     * Both firstIdx and lastIdx should update after revising
      * Resize down after removals to save memory
      */
     private void resize(int cap, boolean flag) {
@@ -57,12 +57,11 @@ public class ArrayDeque<T> {
         if (lastIdx > firstIdx) {
             /* [firstIdx x x x x x x x x x lastIdx] */
             System.arraycopy(items, firstIdx, a, 0, size);
-            /* lastIdx may shift after resizing down */
-            if (flag == false) {
-                lastIdx = cap - size;
-            }
-        }
-        else {
+            /* Start from index 0 */
+            firstIdx=0;
+            lastIdx=size-1;
+
+        } else {
             /* [x x x x x lastIdx o o o o firstIdx x x x x x x]
              * firstIdx should update either up or down
              */
@@ -72,8 +71,8 @@ public class ArrayDeque<T> {
             System.arraycopy(items, firstIdx, a, cap - rightNum, rightNum);
             /* firstIdx should change after resizing */
             firstIdx = cap - rightNum;
-            capacity = cap;
         }
+        capacity = cap;
         items = a;
     }
 
@@ -84,15 +83,14 @@ public class ArrayDeque<T> {
             return;
         }
         if (size == capacity) {
-            int newCapacity = capacity * FACTOR;
+            int newCapacity = capacity + capacity / FACTOR;
             resize(newCapacity, true);
             capacity = newCapacity;
         }
         //move the firstIdx if not full
         if (firstIdx > 0) {
             firstIdx--;
-        }
-        else if (firstIdx == 0) {
+        } else if (firstIdx == 0) {
             firstIdx = capacity - 1;
         }
         items[firstIdx] = item;
@@ -106,7 +104,7 @@ public class ArrayDeque<T> {
             return;
         }
         if (size == capacity) {
-            int newCapacity = capacity * FACTOR;
+            int newCapacity = capacity + capacity / FACTOR;
             resize(newCapacity, true);
             capacity = newCapacity;
         }
@@ -135,18 +133,23 @@ public class ArrayDeque<T> {
             firstIdx %= capacity;
         }
         size--;
-        if (size * 2 < capacity - 1) {
-            resize(capacity / 2, false);
+        if (size > 1 && size * 2 < capacity - 1) {
+            resize(capacity - capacity / 2, false);
             //lastIdx may have to shift after size's shrinking
         }
         return ret;
     }
 
+    /**
+     * Should maintain a mininum size of the array
+     * @return
+     */
     public T removeLast() {
         if (size == 0) {
             return null;
         }
         T ret = items[lastIdx];
+        items[lastIdx] = null;
         /* If the size just is one, just make null the item,
             do not need to shift the pointer
          */
@@ -157,8 +160,8 @@ public class ArrayDeque<T> {
             }
         }
         size--;
-        if (size * 2 < capacity - 1) {
-            resize(capacity / 2, false);
+        if (size > 1 && size * 2 < capacity - 1) {
+            resize(capacity - capacity / 2, false);
             //lastIdx may have to shift after size's shrinking
         }
         return ret;
@@ -180,14 +183,24 @@ public class ArrayDeque<T> {
 
 //    public static void main(String args[]){
 //        ArrayDeque<Integer> adq=new ArrayDeque<Integer>();
+//        int check;
+//        adq.addFirst(0);
+//        adq.addLast(1);
+//        adq.addLast(2);
+//        boolean e=adq.isEmpty();
+//        adq.removeLast();
+//        adq.addFirst(3);
+//        adq.removeFirst();
+//        adq.printDeque();
+//        for(int i=0;i<10;i++){
+//            adq.removeFirst();
+//        }
 //        for(int i=0;i<20;i++){
-//            if(i%2==0) adq.addFirst(i);
-//            else adq.addLast(i);
+//            adq.addLast(i);
 //        }
-//        for(int i=0;i<11;i++){
-//            if(i%2==0) adq.removeFirst();
-//            else adq.removeLast();
-//        }
+//
+//
+//
 //
 //    }
 
