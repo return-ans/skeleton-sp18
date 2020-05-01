@@ -169,7 +169,9 @@ public class ArrayDeque<T> {
     }
 
     public void printDeque() {
-        if (size == 0) return;
+        if (size == 0) {
+            return;
+        }
         int tmp = firstIdx;
         for (int i = 0; i < size; i++) {
             System.out.print(items[tmp]);
