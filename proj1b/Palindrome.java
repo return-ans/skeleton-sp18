@@ -32,10 +32,11 @@ public class Palindrome {
     /**
      * Character type
      *
-     * @param word
+     * @param word *** word may be null
      * @return
      */
     public boolean isPalindrome(String word) {
+        if (word == null) return true;
         Deque<Character> tmp = wordToDeque(word);
         return help(tmp);
     }
@@ -58,6 +59,7 @@ public class Palindrome {
      * @return
      */
     public boolean isPalindrome(String word, CharacterComparator cc) {
+        if (word == null) return true;
         Deque<Character> tmp = wordToDeque(word);
         return helpc(tmp, cc);
     }
