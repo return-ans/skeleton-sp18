@@ -1,9 +1,5 @@
 package synthesizer;
 
-
-import java.util.ArrayList;
-import java.util.List;
-
 //Make sure this class is public
 public class GuitarString {
     /**
