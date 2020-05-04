@@ -15,12 +15,14 @@ public class Palindrome {
     }
 
     public boolean isPalindrome(String word) {
-        if (word.length() <= 1) {
+        int len = word.length();
+        int mid = len / 2;
+        if (len <= 1) {
             return true;
         }
-        for (int i = 0; i < word.length() / 2; i++) {
+        for (int i = 0; i < mid; i++) {
             //Symmetric
-            if (word.charAt(i) != word.charAt(word.length() - 1 - i)) {
+            if (word.charAt(i) != word.charAt(len - 1 - i)) {
                 return false;
             }
         }
@@ -35,12 +37,14 @@ public class Palindrome {
      * @return
      */
     public boolean isPalindrome(String word, CharacterComparator cc) {
-        if (word.length() <= 1) {
+        int len = word.length();
+        int mid = len / 2;
+        if (len <= 1) {
             return true;
         }
-        for (int i = 0; i < word.length() / 2; i++) {
+        for (int i = 0; i < mid; i++) {
             //Two char are different by one
-            if (!cc.equalChars(word.charAt(i), word.charAt(word.length() - 1 - i))) {
+            if (!cc.equalChars(word.charAt(i), word.charAt(len - 1 - i))) {
                 return false;
             }
         }
