@@ -14,41 +14,52 @@ public class Palindrome {
         return ret;
     }
 
-    public boolean isPalindrome(String word) {
-        int len = word.length();
-        int mid = len / 2;
-        if (len <= 1) {
+    /**
+     * Recursive method
+     *
+     * @param dq
+     * @return
+     */
+    private boolean help(Deque<Character> dq) {
+        if (dq.size() <= 1) {
             return true;
         }
-        for (int i = 0; i < mid; i++) {
-            //Symmetric
-            if (word.charAt(i) != word.charAt(len - 1 - i)) {
-                return false;
-            }
-        }
-        return true;
+        Character head = dq.removeFirst();
+        Character tail = dq.removeLast();
+        return (head == tail) && help(dq);
     }
 
     /**
-     * Symmetric in odd-by-one, different by exactly one
+     * Character type
+     *
+     * @param word
+     * @return
+     */
+    public boolean isPalindrome(String word) {
+        Deque<Character> tmp = wordToDeque(word);
+        return help(tmp);
+    }
+
+    private boolean helpc(Deque<Character> dq, CharacterComparator cc) {
+        if (dq.size() <= 1) {
+            return true;
+        }
+        Character head = dq.removeFirst();
+        Character tail = dq.removeLast();
+        //continue to the rest of the deque
+        return (cc.equalChars(head, tail)) && helpc(dq, cc);
+    }
+
+    /**
+     * judge using deque
      *
      * @param word
      * @param cc   (abstract)
      * @return
      */
     public boolean isPalindrome(String word, CharacterComparator cc) {
-        int len = word.length();
-        int mid = len / 2;
-        if (len <= 1) {
-            return true;
-        }
-        for (int i = 0; i < mid; i++) {
-            //Two char are different by one
-            if (!cc.equalChars(word.charAt(i), word.charAt(len - 1 - i))) {
-                return false;
-            }
-        }
-        return true;
+        Deque<Character> tmp = wordToDeque(word);
+        return helpc(tmp, cc);
     }
 
 }
