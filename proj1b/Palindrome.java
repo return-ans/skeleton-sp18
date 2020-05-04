@@ -15,6 +15,9 @@ public class Palindrome {
     }
 
     public boolean isPalindrome(String word) {
+        if (word.length() <= 1) {
+            return true;
+        }
         for (int i = 0; i < word.length() / 2; i++) {
             //Symmetric
             if (word.charAt(i) != word.charAt(word.length() - 1 - i)) {
@@ -28,10 +31,13 @@ public class Palindrome {
      * Symmetric in odd-by-one, different by exactly one
      *
      * @param word
-     * @param cc  (abstract)
+     * @param cc   (abstract)
      * @return
      */
     public boolean isPalindrome(String word, CharacterComparator cc) {
+        if (word.length() <= 1) {
+            return true;
+        }
         for (int i = 0; i < word.length() / 2; i++) {
             //Two char are different by one
             if (!cc.equalChars(word.charAt(i), word.charAt(word.length() - 1 - i))) {
