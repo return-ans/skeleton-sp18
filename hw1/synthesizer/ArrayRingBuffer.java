@@ -2,7 +2,7 @@ package synthesizer;
 
 import java.util.Iterator;
 
-public class ArrayRingBuffer<T> implements BoundedQueue<T> {
+public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
     /* Index for the next dequeue or peek. */
     private int first;            // index for the next dequeue or peek
     /* Index for the next enqueue. */
@@ -39,10 +39,10 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T> {
 
     @Override
     public void enqueue(T x) {
-        if (isFull() == true) {
+        if (isFull()) {
             throw new RuntimeException("Ring buffer overflow");
         } else {
-            if (isEmpty() != true) {
+            if (!isEmpty()) {
                 last++;
                 last %= capacity(); //circle
             }
