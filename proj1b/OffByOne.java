@@ -5,7 +5,8 @@ public class OffByOne implements CharacterComparator {
      * Two are different by exactly one
      */
     public boolean equalChars(char x, char y) {
-        return x - y == 1 || y - x == 1;
+        int cmp = Math.abs(x - y);
+        return cmp == 1;
     }
 
 

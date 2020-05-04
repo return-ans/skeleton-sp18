@@ -10,6 +10,7 @@ public class OffByN implements CharacterComparator {
      * two chars are different by exactly diff
      */
     public boolean equalChars(char x, char y) {
-        return x - y == diff || y - x == diff;
+        int cmp = Math.abs(x - y);
+        return cmp == diff;
     }
 }
