@@ -5,20 +5,21 @@ import edu.princeton.cs.introcs.StdStats;
 
 public class PercolationStats {
     private double[] fraction; // the number of open sites of each time
-    private int times;
+    private int t;
     private int size;
     private double meanVal;
     private double stddevVal;
+    private double lo;
+    private double hi;
 
     private void simulation(Percolation perc, int times) {
         while (!perc.percolates()) {
             int row = StdRandom.uniform(size);
             int col = StdRandom.uniform(size);
-            if (!perc.isOpen(row, col)) {
-                perc.open(row, col);
-            }
+            perc.open(row, col);
         }
-        fraction[times] = perc.numberOfOpenSites() / (size * size);
+        //cast to double!
+        fraction[times] = (double) perc.numberOfOpenSites() / (size * size);
     }
 
     // perform T independent experiments on an N-by-N grid
@@ -30,35 +31,35 @@ public class PercolationStats {
             throw new IllegalArgumentException(T + "is <=0 ");
         }
         fraction = new double[T];
-        times = T;
+        t = T;
         size = N;
         for (int i = 0; i < T; i++) {
             simulation(pf.make(N), i);
         }
+        meanVal = StdStats.mean(fraction);
+        stddevVal = StdStats.stddev(fraction);
+        lo = meanVal - 1.96 * stddev() / Math.sqrt(t);
+        hi = meanVal + 1.96 * stddev() / Math.sqrt(t);
     }
 
     // sample mean of percolation threshold
     public double mean() {
-        meanVal = StdStats.mean(fraction);
         return meanVal;
     }
 
     // sample standard deviation of percolation threshold
     public double stddev() {
-        stddevVal = StdStats.stddev(fraction);
         return stddevVal;
     }
 
     // low endpoint of 95% confidence interval
     public double confidenceLow() {
-        double tmp = 1.96 * stddev() / Math.sqrt(times);
-        return mean() - tmp;
-
+        return lo;
     }
 
     // high endpoint of 95% confidence interval
     public double confidenceHigh() {
-        double tmp = 1.96 * stddev() / Math.sqrt(times);
-        return mean() + tmp;
+        return hi;
     }
+
 }
