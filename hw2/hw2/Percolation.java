@@ -1,15 +1,13 @@
 package hw2;
 
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
-import org.junit.runner.notification.StoppedByUserException;
 
 public class Percolation {
     private int size;
     private int openCnt;
-    private boolean open[];
-    // In a percolation area, every point both connects to the top and the bottom!!!!
-    private boolean connectTop[];
-    private boolean connectBottom[];
+    private boolean[] open;
+    private boolean[] connectTop;
+    private boolean[] connectBottom;
     private WeightedQuickUnionUF uf;
     private boolean isPercolation;
 
@@ -87,12 +85,12 @@ public class Percolation {
             int newY = col + dy[k];
             if (inBound(newX, newY) && isOpen(newX, newY)) {
                 //using .find() method  use its root to judge connection
-                if (connectTop[uf.find(newIndex(newX, newY))] ||
-                        connectTop[uf.find(index)]) {
+                if (connectTop[uf.find(newIndex(newX, newY))]
+                        || connectTop[uf.find(index)]) {
                     top = true;
                 }
-                if (connectBottom[uf.find(newIndex(newX, newY))] ||
-                        connectBottom[uf.find(index)]) {
+                if (connectBottom[uf.find(newIndex(newX, newY))]
+                        || connectBottom[uf.find(index)]) {
                     bottom = true;
                 }
                 //then union with them
