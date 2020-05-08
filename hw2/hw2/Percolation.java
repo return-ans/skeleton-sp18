@@ -112,21 +112,22 @@ public class Percolation {
     }
 
     public boolean isOpen(int row, int col) {
-        if (row >= size || col >= size) {
+        if (!inBound(row, col)) {
             throw new IndexOutOfBoundsException("Out of bound!");
         }
         return open[newIndex(row, col)];
     }
 
     public boolean isFull(int row, int col) {
-        if (row >= size || col >= size) {
+        if (!inBound(row, col)) {
             throw new IndexOutOfBoundsException("Out of bound!");
         }
         //As for non-root points, find their root which represents their states
         //both connect top and bottom
         int index = newIndex(row, col);
         //check their root
-        return connectTop[uf.find(index)] && connectBottom[uf.find(index)];
+        //return true if the site just is connected to the top
+        return connectTop[uf.find(index)];
     }
 
     public int numberOfOpenSites() {
