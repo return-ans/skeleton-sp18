@@ -124,27 +124,19 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         validateSinkSwimArg(index);
         //choose the smaller child
         while (index * 2 <= contents.length) {
-            int left = leftIndex(index);
-            int right = rightIndex(index);
-            int lessLeft = min(index, left);
-            int lessRight = min(index, right);
-            if (lessLeft == index && lessRight == index) {
-                break;
-            } else if (lessLeft == left && lessRight == right) {
-                //if both bigger than its children
-                //choose the smaller child
-                int tmp = min(left, right);
-                swap(index, tmp);
-                index = tmp;
-            } else if (lessLeft == left && lessRight == index) {
-                //just bigger than left-child
-                swap(index, left);
-                index = left;
-            } else if (lessLeft == index && lessRight == right) {
-                //just bigger than right-child
-                swap(index, right);
-                index = right;
+            int j = index * 2; //left child
+            if (j < contents.length && min(j, j + 1) == j + 1) {
+                //right is smaller
+                j++;
             }
+            //using the smaller child to compare to this node
+            if (min(j, index) == index) {
+                break;
+                //this node is smaller, do not need to change
+            }
+            //need to change
+            swap(index, j);
+            index = j;
         }
     }
 
@@ -159,9 +151,9 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         if (size == contents.length - 1) {
             resize(contents.length * 2);
         }
-        if (item == null) {
-            return;
-        }
+//        if (item == null) {
+//            return;
+//        }
         Node newNode = new Node(item, priority);
         //move size pointer and add it
         contents[++size] = newNode;
