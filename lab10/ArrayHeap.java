@@ -230,7 +230,8 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
             if (getNode(i) == null) {
                 break;
             }
-            if (item.equals(contents[i])) {
+            if (item.equals(contents[i].item())) {
+                //get item in Node class
                 index = i;
                 break;
             }
