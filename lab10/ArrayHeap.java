@@ -193,6 +193,11 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
             return null;
         }
         T ret = peek();
+        if (size == 1) {
+            contents[1] = null;
+            size = 0;
+            return ret;
+        }
         contents[1] = contents[size];
         contents[size] = null;
         sink(1);
@@ -354,21 +359,21 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         }
         // Change item x6's priority to a low value.
 
-        pq.contents[6].myPriority = 0;
+        pq.contents[1].myPriority = 0;
         System.out.println("PQ before swimming:");
         System.out.println(pq);
 
         // Swim x6 upwards. It should reach the root.
 
-        pq.swim(6);
+        pq.swim(1);
         System.out.println("PQ after swimming:");
         System.out.println(pq);
-        assertEquals("x6", pq.contents[1].myItem);
+        assertEquals("x1", pq.contents[1].myItem);
         assertEquals("x2", pq.contents[2].myItem);
-        assertEquals("x1", pq.contents[3].myItem);
+        assertEquals("x3", pq.contents[3].myItem);
         assertEquals("x4", pq.contents[4].myItem);
         assertEquals("x5", pq.contents[5].myItem);
-        assertEquals("x3", pq.contents[6].myItem);
+        assertEquals("x6", pq.contents[6].myItem);
         assertEquals("x7", pq.contents[7].myItem);
     }
 
