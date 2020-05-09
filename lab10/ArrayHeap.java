@@ -125,6 +125,11 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         //choose the smaller child
         while (index * 2 <= contents.length) {
             int j = index * 2; //left child
+            //check null
+            if (getNode(j) == null) {
+                //actual size is less than the array length, and the left child may be null!!
+                break;
+            }
             if (j < contents.length && min(j, j + 1) == j + 1) {
                 //right is smaller
                 j++;
@@ -218,7 +223,13 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
     public void changePriority(T item, double priority) {
         //find its index in the array
         int index = 0;
+        if (item == null) {
+            return;
+        }
         for (int i = 1; i < contents.length; i++) {
+            if (getNode(i) == null) {
+                break;
+            }
             if (item.equals(contents[i])) {
                 index = i;
                 break;
@@ -241,9 +252,8 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         //doesn't smaller than its children
         if (!(lessLeft == index && lessRight == index)) {
             sink(index);
-        }
-        //smaller than its parent
-        if (lessParent == index) {
+        } else if (lessParent == index) {
+            //smaller than its parent
             swim(index);
         }
 
