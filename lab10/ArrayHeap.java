@@ -239,22 +239,16 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
             //can not find or the priority doesn't change
             return;
         }
-        int parent = parentIndex(index);
-        int left = leftIndex(index);
-        int right = rightIndex(index);
-        int lessParent = min(index, parent);
-        int lessLeft = min(index, left);
-        int lessRight = min(index, right);
-        //order doesn't change
-        if (lessParent == parent && lessLeft == index && lessRight == index) {
-            return;
-        }
-        //doesn't smaller than its children
-        if (!(lessLeft == index && lessRight == index)) {
-            sink(index);
-        } else if (lessParent == index) {
-            //smaller than its parent
+        double oldP = contents[index].myPriority;
+        contents[index].myPriority = priority;
+        //smaller-->up
+        //bigger-->down
+        if (priority < oldP) {
             swim(index);
+            //will judge whether swap in swim method
+        } else {
+            sink(index);
+            //will judge whether sink in sink method
         }
 
     }
