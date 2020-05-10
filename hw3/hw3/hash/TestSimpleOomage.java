@@ -7,7 +7,6 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 
-import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
@@ -35,10 +34,10 @@ public class TestSimpleOomage {
         SimpleOomage ooA2 = new SimpleOomage(30, 10, 20);
         SimpleOomage ooA3 = new SimpleOomage(250, 0, 20);
         SimpleOomage ooA4 = new SimpleOomage(5, 245, 20);
-        assertNotEquals(ooA0.hashCode(),ooA1.hashCode());
-        assertNotEquals(ooA0.hashCode(),ooA2.hashCode());
-        assertNotEquals(ooA1.hashCode(),ooA2.hashCode());
-        assertNotEquals(ooA3.hashCode(),ooA4.hashCode());
+        assertNotEquals(ooA0.hashCode(), ooA1.hashCode());
+        assertNotEquals(ooA0.hashCode(), ooA2.hashCode());
+        assertNotEquals(ooA1.hashCode(), ooA2.hashCode());
+        assertNotEquals(ooA3.hashCode(), ooA4.hashCode());
     }
 
     @Test
