@@ -1,5 +1,7 @@
 package hw3.hash;
+
 import java.awt.Color;
+
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdDraw;
 
@@ -10,26 +12,41 @@ public class SimpleOomage implements Oomage {
     protected int blue;
 
     private static final double WIDTH = 0.01;
-    private static final boolean USE_PERFECT_HASH = false;
+    private static final boolean USE_PERFECT_HASH = true;
 
     @Override
     public boolean equals(Object o) {
-        // TODO: Write this method.
-        return false;
+        if (o == this) {
+            //compare with itself
+            return true;
+        }
+        if (o == null || o.getClass() != this.getClass()) {
+            //null or other class
+            return false;
+        }
+        //cast to this class-->SimpleOomage
+        SimpleOomage other = (SimpleOomage) o;
+        return other.blue == this.blue && other.red == this.red && other.green == this.green;
     }
 
-    /* Uncomment this method after you've written
-       equals and failed the testHashCodeAndEqualsConsistency
-       test.
     @Override
     public int hashCode() {
+        /*
+        When the HashSet checks to see if ooA2 is there, it will first compute ooA2.hashCode,
+        which for our code will be the default hashCode(), which is just the memory address.
+         */
+        //default hashCode just uses memory address
         if (!USE_PERFECT_HASH) {
             return red + green + blue;
         } else {
-            // TODO: Write a perfect hash function for Simple Oomages.
-            return 0;
+            int x = red / 5;
+            int y = green / 5;
+            int z = blue / 5;
+            //calculate in 3-D coordination
+            //each (r, g, b) represents a unique site in this 52x52x52 cube
+            return (x) + (y * 52) + (z * 52 * 52);
         }
-    }*/
+    }
 
     public SimpleOomage(int r, int g, int b) {
         if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
