@@ -44,20 +44,21 @@ public class TestComplexOomage {
         // Your code here.
         // out of int
         int N = 1000;
-        List<Integer> params = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            params.add(255);
-        }
-        long total = 0;
-        for (int x : params) {
-            if(total>2147483647){
-                throw new IllegalArgumentException("hashCode out of bound of int");
+        ComplexOomage tmp = ComplexOomage.randomComplexOomage();
+        //check whether out of bound of Integer
+        int len = tmp.params.size();
+        int cnt = 0;
+        int curHashCode = tmp.hashCode();
+        for (int i = 0; i < len; i++) {
+            if (tmp.params.indexOf(i) == 0) {
+                cnt++;
             }
-            total = total * 256;
-            total = total + x;
         }
+        //if out of Integer, the sign bit should be 1
+        //so, use 0x7fffffff to ignore the sign bit which is 1
+        //should not fail due to an IllegalArgumentException.
         for (int i = 0; i < N; i++) {
-            deadlyList.add(new ComplexOomage(params));
+            deadlyList.add(tmp);
             //should new the new class
         }
 
