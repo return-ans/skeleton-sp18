@@ -30,6 +30,9 @@ public class MazeBreadthFirstPaths extends MazeExplorer {
         t = maze.xyTo1D(targetX, targetY);
         distTo[s] = 0;
         edgeTo[s] = s;
+        if (s == t) {
+            targetFound = true;
+        }
     }
 
     /**
@@ -43,7 +46,7 @@ public class MazeBreadthFirstPaths extends MazeExplorer {
         while (!q.isEmpty()) {
             int v = q.poll();
             for (int w : maze.adj(v)) {
-                if (!marked[w]&&!targetFound) {
+                if (!marked[w] && !targetFound) {
                     edgeTo[w] = v;
                     marked[w] = true;
                     announce();
