@@ -122,17 +122,16 @@ public class Board implements WorldState {
 
     public int manhattan() {
         int ret = 0;
-        for (int i = 0; i < size - 1; i++) {
+        for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                int correctRow = goalRowIndex(tileAt(i, j));
-                int correctCol = goalColIndex(tileAt(i, j));
-                ret += Math.abs(i - correctRow) + Math.abs(j - correctCol);
+                //to the current tile
+                //if (i,j) is BLANK, skip it
+                if (tileAt(i, j) != BLANK) {
+                    int correctRow = goalRowIndex(tileAt(i, j));
+                    int correctCol = goalColIndex(tileAt(i, j));
+                    ret += Math.abs(i - correctRow) + Math.abs(j - correctCol);
+                }
             }
-        }
-        for (int j = 0; j < size - 1; j++) {
-            int correctRow = goalRowIndex(tileAt(size - 1, j));
-            int correctCol = goalColIndex(tileAt(size - 1, j));
-            ret += Math.abs(size - 1 - correctRow) + Math.abs(j - correctCol);
         }
         return ret;
     }
