@@ -117,7 +117,7 @@ public class Board implements WorldState {
         if (g == BLANK) {
             return size - 1;
         }
-        return (g - 1) % size ;
+        return (g - 1) % size;
     }
 
     public int manhattan() {
