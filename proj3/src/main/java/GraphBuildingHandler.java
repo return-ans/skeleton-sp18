@@ -42,7 +42,6 @@ public class GraphBuildingHandler extends DefaultHandler {
     private GraphDB.Node lastNode; // record the extraInfo for a node!!
     private GraphDB.Edge lastEdge;
     private boolean lastEdgeValid;
-    private ArrayList<Long> possibleConnection;
 
     /**
      * Create a new GraphBuildingHandler.
@@ -58,12 +57,12 @@ public class GraphBuildingHandler extends DefaultHandler {
      * Called at the beginning of an element. Typically, you will want to handle each element in
      * here, and you may want to track the parent element.
      *
-     * @param uri        The Namespace URI, or the empty string if the element has no Namespace URI or
-     *                   if Namespace processing is not being performed.
+     * @param uri        The Namespace URI, or the empty string if the element has no Namespace
+     *                   URI or if Namespace processing is not being performed.
      * @param localName  The local name (without prefix), or the empty string if Namespace
      *                   processing is not being performed.
-     * @param qName      The qualified name (with prefix), or the empty string if qualified names are
-     *                   not available. This tells us which element we're looking at.
+     * @param qName      The qualified name (with prefix), or the empty string if qualified names
+     *                   are not available. This tells us which element we're looking at.
      * @param attributes The attributes attached to the element. If there are no attributes, it
      *                   shall be an empty Attributes object.
      * @throws SAXException Any SAX exception, possibly wrapping another exception.
@@ -74,11 +73,8 @@ public class GraphBuildingHandler extends DefaultHandler {
             throws SAXException {
         /* Some example code on how you might begin to parse XML files. */
         if (qName.equals("node")) {
-            // just is a point
             /* We encountered a new <node...> tag. */
             activeState = "node";
-            /* DONE Use the above information to save a "node" to somewhere. */
-            /* Hint: A graph-like structure would be nice. */
             // extract the useful information
             long id = Long.parseLong(attributes.getValue("id"));
             Double lon = Double.parseDouble(attributes.getValue("lon"));
@@ -93,27 +89,22 @@ public class GraphBuildingHandler extends DefaultHandler {
             long id = Long.parseLong(attributes.getValue("id"));
             GraphDB.Edge newEdge = new GraphDB.Edge(id);
             lastEdge = newEdge;
-            g.addEdge(id, newEdge);
-            lastEdgeValid = true; // judge the validation later
-            possibleConnection = new ArrayList<>();
+            lastEdgeValid = false; // judge the validation later
 //            System.out.println("Beginning a way...");
         } else if (activeState.equals("way") && qName.equals("nd")) {
             /* While looking at a way, we found a <nd...> tag. */
 
             /* DONE Use the above id to make "possible" connections between the nodes in this way */
-            /* Hint1: It would be useful to remember what was the last node in this way. */
-            /* Hint2: Not all ways are valid. So, directly connecting the nodes here would be
-            cumbersome since you might have to remove the connections if you later see a tag that
-            makes this way invalid. Instead, think of keeping a list of possible connections and
-            remember whether this way is valid or not. */
+            // the list of nodes is in Edge class!!!!!!!!!!!!!!!
             long nodeId = Long.parseLong(attributes.getValue("ref"));
-            possibleConnection.add(nodeId);
+            lastEdge.addNode(g.getNode(nodeId));
 
         } else if (activeState.equals("way") && qName.equals("tag")) {
             /* While looking at a way, we found a <tag...> tag. */
             String k = attributes.getValue("k");
             String v = attributes.getValue("v");
             if (k.equals("maxspeed")) {
+                ;
                 //System.out.println("Max Speed: " + v);
                 /* DONE set the max speed of the "current way" here. */
             } else if (k.equals("highway")) {
@@ -122,17 +113,13 @@ public class GraphBuildingHandler extends DefaultHandler {
                 /* DONE Figure out whether this way and its connections are valid. */
                 if (ALLOWED_HIGHWAY_TYPES.contains(v)) {
                     lastEdge.extraInfo.put(k, v);
-                    lastEdge.flag = true;
-                } else {
-                    lastEdge.flag = false;
-                    lastEdgeValid = false; // this type is not allowed, set false
+                    lastEdgeValid = true;
                 }
                 /* Hint: Setting a "flag" is good enough! */
             } else if (k.equals("name")) {
-                //System.out.println("Way Name: " + v);
-                lastEdge.extraInfo.put(k, v);
+//                lastEdge.extraInfo.put(k, v);
+                ;
             }
-//            System.out.println("Tag with k=" + k + ", v=" + v + ".");
         } else if (activeState.equals("node") && qName.equals("tag") && attributes.getValue("k")
                 .equals("name")) {
             /* While looking at a node, we found a <tag...> with k="name". */
@@ -151,12 +138,12 @@ public class GraphBuildingHandler extends DefaultHandler {
      * Receive notification of the end of an element. You may want to take specific terminating
      * actions here, like finalizing vertices or edges found.
      *
-     * @param uri       The Namespace URI, or the empty string if the element has no Namespace URI or
-     *                  if Namespace processing is not being performed.
+     * @param uri       The Namespace URI, or the empty string if the element has no Namespace URI
+     *                  or if Namespace processing is not being performed.
      * @param localName The local name (without prefix), or the empty string if Namespace
      *                  processing is not being performed.
-     * @param qName     The qualified name (with prefix), or the empty string if qualified names are
-     *                  not available.
+     * @param qName     The qualified name (with prefix), or the empty string if qualified names
+     *                  are not available.
      * @throws SAXException Any SAX exception, possibly wrapping another exception.
      */
     @Override
@@ -167,12 +154,16 @@ public class GraphBuildingHandler extends DefaultHandler {
             chance to actually connect the nodes together if the way is valid. */
 //            System.out.println("Finishing a way...");
             if (lastEdgeValid) {
-                int len = possibleConnection.size();
+                // is valid way, then add this way and connect the nodes!!!!!
+                g.addEdge(lastEdge.id, lastEdge);
+                int len = lastEdge.nodesInEdge.size();
                 for (int i = 1; i < len; i++) {
-                    g.connect(possibleConnection.get(i - 1), possibleConnection.get(i));
+                    g.connect(lastEdge.nodesInEdge.get(i - 1).id, lastEdge.nodesInEdge.get(i).id);
                 }
             }
+            lastEdge = null;
+            lastEdgeValid = false;
+            // make null at the end of this element
         }
     }
-
 }

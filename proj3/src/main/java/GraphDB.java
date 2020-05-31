@@ -1,13 +1,17 @@
-import example.CSCourseDB;
 import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.util.*;
 
 /**
  * Graph for storing all of the intersection (vertex) and road (edge) information.
@@ -21,7 +25,6 @@ import java.util.*;
 public class GraphDB {
     private final Map<Long, Node> nodes = new LinkedHashMap<>(); // id to Node
     private final Map<Long, Edge> edges = new LinkedHashMap<>(); // id to Edge
-    private final Set<Long> invalidEdges = new HashSet<>(); // id to Edge
     /** Your instance variables for storing the graph. You should consider
      * creating helper classes, e.g. Node, Edge, etc. */
 
@@ -65,8 +68,10 @@ public class GraphDB {
     private void clean() {
         // DONE: Your code here.
         // remove this id from HashMap
-        Set<Long> keys = nodes.keySet();
-        for (long id : keys) {
+        ArrayList<Long> keys = new ArrayList<>(nodes.keySet());
+        int len = keys.size();
+        for (int i = 0; i < len; i++) {
+            long id = keys.get(i);
             Node nd = nodes.get(id);
             if (nd.adjTo.size() == 0) {
                 // remove the nodes without connections
@@ -205,32 +210,13 @@ public class GraphDB {
         this.edges.put(id, eg);
     }
 
-    boolean hasEdge(long id) {
-        return edges.containsKey(id);
-    }
-
-    Edge getEdge(long id) {
-        if (hasEdge(id)) {
-            return edges.get(id);
-        }
-        return null;
-    }
-
-    boolean hasNode(long id) {
-        return nodes.containsKey(id);
-    }
-
-    Node getNode(long id) {
-        if (hasNode(id)) {
-            // if has this node
-            return nodes.get(id);
-        }
-        return null;
-    }
-
     void connect(long id1, long id2) {
         nodes.get(id1).adjTo.add(id2);
         nodes.get(id2).adjTo.add(id1);
+    }
+
+    Node getNode(long id){
+        return nodes.get(id);
     }
 
     /**
@@ -242,22 +228,15 @@ public class GraphDB {
         Double lon;
         Double lat;
         // record the connection with other nodes and the type of the road
-        Set<Long> adjTo;// mutual connection
+        Set<Long> adjTo; // mutual connection
         Map<String, String> extraInfo; // record the tag as extraInfo using HashMap
-        int flag; // 1-location or 0-point
-        Set<Long> inEdge; // in which edges
 
         Node(long id, Double lon, Double lat, int flag) {
             this.id = id;
             this.lon = lon;
             this.lat = lat;
-            this.flag = flag;
             adjTo = new HashSet<>();
             extraInfo = new HashMap<>();
-        }
-
-        public void addEdge(long id) {
-            inEdge.add(id);
         }
     }
 
@@ -268,15 +247,18 @@ public class GraphDB {
      */
     static class Edge {
         long id;
-        List<Node> connections;
+        // the list of nodes in this edge is in Edge class!!!!!!!!!!!!!!!
+        ArrayList<Node> nodesInEdge;
         Map<String, String> extraInfo;
-        boolean flag;
 
         Edge(long id) {
             this.id = id;
-            this.flag = true;
-            connections = new ArrayList<>(); // lists the nodes in order
+            nodesInEdge = new ArrayList<>(); // lists the nodes in order
             extraInfo = new HashMap<>();
+        }
+
+        public void addNode(Node nd) {
+            this.nodesInEdge.add(nd);
         }
     }
 }
