@@ -60,19 +60,19 @@ public class Rasterer {
      * @param width
      * @return
      */
-    private Double LonDPP(Double lrlon, Double ullon, Double width) {
+    private Double lonDPP(Double lrlon, Double ullon, Double width) {
         return (lrlon - ullon) / width;
     }
 
     /**
      * find the proper depth index that LonDPP matches the query box
      *
-     * @param q_LonDPP
+     * @param q
      * @return
      */
-    private int properLonDPP(Double q_LonDPP) {
+    private int properLonDPP(Double q) {
         for (int i = 0; i < 8; i++) {
-            if (LONDPP_OF_EACH_DEPTH[i].compareTo(q_LonDPP) <= 0) {
+            if (LONDPP_OF_EACH_DEPTH[i].compareTo(q) <= 0) {
                 return i;
             }
         }
@@ -130,7 +130,7 @@ public class Rasterer {
         q_lrlat = params.get("lrlat");
         q_w = params.get("w");
         q_h = params.get("h");
-        q_LonDPP = LonDPP(q_lrlon, q_ullon, q_w);
+        q_LonDPP = lonDPP(q_lrlon, q_ullon, q_w);
         depth = properLonDPP(q_LonDPP);
         k = 1 << depth;
         dLon = (ROOT_LRLON - ROOT_ULLON) / (double) k;
@@ -159,8 +159,7 @@ public class Rasterer {
             for (int c = 0; c < colNum + 1; c++) {
                 int col = c + ulLonIndex;
                 int row = r + ulLatIndex;
-                render_grid[r][c] = "d" + depth + "_x" + col +
-                        "_y" + row + ".png";
+                render_grid[r][c] = "d" + depth + "_x" + col + "_y" + row + ".png";
             }
         }
 
