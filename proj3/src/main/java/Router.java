@@ -1,4 +1,10 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.PriorityQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,17 +39,19 @@ public class Router {
 
         // should override the comparator for PriorityQueue
         // Consider the distance from start and the estimate distance to destination
-        class myComparator implements Comparator<Long> {
+        class MyComparator implements Comparator<Long> {
             @Override
             public int compare(Long a, Long b) {
-                double d1 = g.distance(startId, a) + g.distance(a, endId);
-                double d2 = g.distance(startId, b) + g.distance(b, endId);
+                // the sum of current distance and future estimate distance to end
+                // the current distance is in terms of the previous iterations
+                double d1 = dist.get(a) + g.distance(a, endId);
+                double d2 = dist.get(b) + g.distance(b, endId);
                 return Double.compare(d1, d2);
             }
             // compare >0  ==0  <0
         }
 
-        PriorityQueue<Long> pq = new PriorityQueue<Long>(new myComparator());
+        PriorityQueue<Long> pq = new PriorityQueue<>(new MyComparator());
         // initial the record, using all nodes in GraphDB
         for (Long id : g.vertices()) {
             if (id.equals(startId)) {
