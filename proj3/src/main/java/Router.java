@@ -1,5 +1,4 @@
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,21 +15,77 @@ public class Router {
      * Return a List of longs representing the shortest path from the node
      * closest to a start location and the node closest to the destination
      * location.
-     * @param g The graph to use.
-     * @param stlon The longitude of the start location.
-     * @param stlat The latitude of the start location.
+     *
+     * @param g       The graph to use.
+     * @param stlon   The longitude of the start location.
+     * @param stlat   The latitude of the start location.
      * @param destlon The longitude of the destination location.
      * @param destlat The latitude of the destination location.
      * @return A list of node id's in the order visited on the shortest path.
      */
     public static List<Long> shortestPath(GraphDB g, double stlon, double stlat,
                                           double destlon, double destlat) {
-        return null; // FIXME
+        ArrayList<Long> ret = new ArrayList<>();
+        Map<Long, Long> prev = new HashMap<>(); // record the previous node
+        Map<Long, Double> dist = new HashMap<>(); // distance from source node
+        long startId = g.closest(stlon, stlat);
+        long endId = g.closest(destlon, destlat);
+
+        // should override the comparator for PriorityQueue
+        // Consider the distance from start and the estimate distance to destination
+        class myComparator implements Comparator<Long> {
+            @Override
+            public int compare(Long a, Long b) {
+                double d1 = g.distance(startId, a) + g.distance(a, endId);
+                double d2 = g.distance(startId, b) + g.distance(b, endId);
+                return Double.compare(d1, d2);
+            }
+            // compare >0  ==0  <0
+        }
+
+        PriorityQueue<Long> pq = new PriorityQueue<Long>(new myComparator());
+        // initial the record, using all nodes in GraphDB
+        for (Long id : g.vertices()) {
+            if (id.equals(startId)) {
+                dist.put(id, 0.00);
+                prev.put(startId, startId);
+            } else {
+                dist.put(id, Double.MAX_VALUE);
+            }
+            prev.put(id, id);
+            pq.add(id);
+        }
+        boolean flag = false;
+        while (!flag && !pq.isEmpty()) {
+            long u = pq.remove();
+            for (Long v : g.adjacent(u)) {
+                if (dist.get(v) > dist.get(u) + g.distance(u, v)) {
+                    // modify the value in HashMap, using replace method
+                    dist.replace(v, dist.get(u) + g.distance(u, v));
+                    prev.replace(v, u);
+                    // update the distance and re-put it into pq to reorder!!!!!
+                    pq.remove(v);
+                    pq.add(v);
+                }
+                if (v.equals(endId)) {
+                    flag = true;
+                }
+            }
+        }
+
+        Long tmp = endId;
+        while (!tmp.equals(prev.get(tmp))) {
+            ret.add(0, tmp);
+            tmp = prev.get(tmp);
+        }
+        ret.add(0, tmp);
+        return ret;
     }
 
     /**
      * Create the list of directions corresponding to a route on the graph.
-     * @param g The graph to use.
+     *
+     * @param g     The graph to use.
      * @param route The route to translate into directions. Each element
      *              corresponds to a node from the graph in the route.
      * @return A list of NavigatiionDirection objects corresponding to the input
@@ -47,7 +102,9 @@ public class Router {
      */
     public static class NavigationDirection {
 
-        /** Integer constants representing directions. */
+        /**
+         * Integer constants representing directions.
+         */
         public static final int START = 0;
         public static final int STRAIGHT = 1;
         public static final int SLIGHT_LEFT = 2;
@@ -57,15 +114,21 @@ public class Router {
         public static final int SHARP_LEFT = 6;
         public static final int SHARP_RIGHT = 7;
 
-        /** Number of directions supported. */
+        /**
+         * Number of directions supported.
+         */
         public static final int NUM_DIRECTIONS = 8;
 
-        /** A mapping of integer values to directions.*/
+        /**
+         * A mapping of integer values to directions.
+         */
         public static final String[] DIRECTIONS = new String[NUM_DIRECTIONS];
 
-        /** Default name for an unknown way. */
+        /**
+         * Default name for an unknown way.
+         */
         public static final String UNKNOWN_ROAD = "unknown road";
-        
+
         /** Static initializer. */
         static {
             DIRECTIONS[START] = "Start";
@@ -78,11 +141,17 @@ public class Router {
             DIRECTIONS[SHARP_RIGHT] = "Sharp right";
         }
 
-        /** The direction a given NavigationDirection represents.*/
+        /**
+         * The direction a given NavigationDirection represents.
+         */
         int direction;
-        /** The name of the way I represent. */
+        /**
+         * The name of the way I represent.
+         */
         String way;
-        /** The distance along this way I represent. */
+        /**
+         * The distance along this way I represent.
+         */
         double distance;
 
         /**
@@ -102,6 +171,7 @@ public class Router {
         /**
          * Takes the string representation of a navigation direction and converts it into
          * a Navigation Direction object.
+         *
          * @param dirAsString The string representation of the NavigationDirection.
          * @return A NavigationDirection object representing the input string.
          */
@@ -149,8 +219,8 @@ public class Router {
         public boolean equals(Object o) {
             if (o instanceof NavigationDirection) {
                 return direction == ((NavigationDirection) o).direction
-                    && way.equals(((NavigationDirection) o).way)
-                    && distance == ((NavigationDirection) o).distance;
+                        && way.equals(((NavigationDirection) o).way)
+                        && distance == ((NavigationDirection) o).distance;
             }
             return false;
         }

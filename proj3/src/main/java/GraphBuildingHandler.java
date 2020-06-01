@@ -2,7 +2,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -103,11 +102,8 @@ public class GraphBuildingHandler extends DefaultHandler {
             /* While looking at a way, we found a <tag...> tag. */
             String k = attributes.getValue("k");
             String v = attributes.getValue("v");
-            if (k.equals("maxspeed")) {
-                ;
-                //System.out.println("Max Speed: " + v);
-                /* DONE set the max speed of the "current way" here. */
-            } else if (k.equals("highway")) {
+
+            if (k.equals("highway")) {
                 // check whether this way is valid or not, see ALLOWED_HIGHWAY_TYPES!!!!
                 //System.out.println("Highway type: " + v);
                 /* DONE Figure out whether this way and its connections are valid. */
@@ -116,9 +112,6 @@ public class GraphBuildingHandler extends DefaultHandler {
                     lastEdgeValid = true;
                 }
                 /* Hint: Setting a "flag" is good enough! */
-            } else if (k.equals("name")) {
-//                lastEdge.extraInfo.put(k, v);
-                ;
             }
         } else if (activeState.equals("node") && qName.equals("tag") && attributes.getValue("k")
                 .equals("name")) {

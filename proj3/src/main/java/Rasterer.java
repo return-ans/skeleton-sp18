@@ -24,13 +24,13 @@ public class Rasterer {
     };
     private int depth;
     private int k; // the number of tiles in a direction, k=2^d
-    private Double q_ullon;
-    private Double q_ullat;
-    private Double q_lrlon;
-    private Double q_lrlat;
-    private Double q_w;
-    private Double q_h;
-    private Double q_LonDPP;
+    private Double qullon;
+    private Double qullat;
+    private Double qlrlon;
+    private Double qlrlat;
+    private Double qw;
+    private Double qh;
+    private Double qLonDPP;
     private Double actLeftLon;
     private Double actRightLon;
     private Double actUpLat;
@@ -43,10 +43,10 @@ public class Rasterer {
     private int lrLatIndex;
     private int rowNum;
     private int colNum;
-    private Double raster_ul_lon;
-    private Double raster_ul_lat;
-    private Double raster_lr_lon;
-    private Double raster_lr_lat;
+    private Double rasterullon;
+    private Double rasterullat;
+    private Double rasterlrlon;
+    private Double rasterlrlat;
 
     public Rasterer() {
         // YOUR CODE HERE
@@ -124,22 +124,22 @@ public class Rasterer {
      */
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
         // System.out.println(params);
-        q_ullon = params.get("ullon");
-        q_ullat = params.get("ullat");
-        q_lrlon = params.get("lrlon");
-        q_lrlat = params.get("lrlat");
-        q_w = params.get("w");
-        q_h = params.get("h");
-        q_LonDPP = lonDPP(q_lrlon, q_ullon, q_w);
-        depth = properLonDPP(q_LonDPP);
+        qullon = params.get("ullon");
+        qullat = params.get("ullat");
+        qlrlon = params.get("lrlon");
+        qlrlat = params.get("lrlat");
+        qw = params.get("w");
+        qh = params.get("h");
+        qLonDPP = lonDPP(qlrlon, qullon, qw);
+        depth = properLonDPP(qLonDPP);
         k = 1 << depth;
         dLon = (ROOT_LRLON - ROOT_ULLON) / (double) k;
         dLat = (ROOT_ULLAT - ROOT_LRLAT) / (double) k;
         // actual size
-        actLeftLon = Math.max(ROOT_ULLON, q_ullon);
-        actRightLon = Math.min(ROOT_LRLON, q_lrlon);
-        actUpLat = Math.min(ROOT_ULLAT, q_ullat);
-        actLowLat = Math.max(ROOT_LRLAT, q_lrlat);
+        actLeftLon = Math.max(ROOT_ULLON, qullon);
+        actRightLon = Math.min(ROOT_LRLON, qlrlon);
+        actUpLat = Math.min(ROOT_ULLAT, qullat);
+        actLowLat = Math.max(ROOT_LRLAT, qlrlat);
 
         // calculate the start and end indices of tiles
         ulLonIndex = leftLonIndex(); // the first tile in upper_left
@@ -148,28 +148,28 @@ public class Rasterer {
         lrLatIndex = lowLatIndex();
         rowNum = lrLatIndex - ulLatIndex;
         colNum = lrLonIndex - ulLonIndex;
-        raster_ul_lon = ROOT_ULLON + (double) ulLonIndex * dLon;
-        raster_ul_lat = ROOT_ULLAT - (double) ulLatIndex * dLat;
-        raster_lr_lon = ROOT_ULLON + (double) (lrLonIndex + 1) * dLon;
-        raster_lr_lat = ROOT_ULLAT - (double) (lrLatIndex + 1) * dLat;
+        rasterullon = ROOT_ULLON + (double) ulLonIndex * dLon;
+        rasterullat = ROOT_ULLAT - (double) ulLatIndex * dLat;
+        rasterlrlon = ROOT_ULLON + (double) (lrLonIndex + 1) * dLon;
+        rasterlrlat = ROOT_ULLAT - (double) (lrLatIndex + 1) * dLat;
 
         // calculate the render_grid
-        String[][] render_grid = new String[rowNum + 1][colNum + 1];
+        String[][] renderGrid = new String[rowNum + 1][colNum + 1];
         for (int r = 0; r < rowNum + 1; r++) {
             for (int c = 0; c < colNum + 1; c++) {
                 int col = c + ulLonIndex;
                 int row = r + ulLatIndex;
-                render_grid[r][c] = "d" + depth + "_x" + col + "_y" + row + ".png";
+                renderGrid[r][c] = "d" + depth + "_x" + col + "_y" + row + ".png";
             }
         }
 
         Map<String, Object> results = new HashMap<>();
         // fill the result Map
-        results.put("render_grid", render_grid);
-        results.put("raster_ul_lon", raster_ul_lon);
-        results.put("raster_ul_lat", raster_ul_lat);
-        results.put("raster_lr_lon", raster_lr_lon);
-        results.put("raster_lr_lat", raster_lr_lat);
+        results.put("render_grid", renderGrid);
+        results.put("raster_ul_lon", rasterullon);
+        results.put("raster_ul_lat", rasterullat);
+        results.put("raster_lr_lon", rasterlrlon);
+        results.put("raster_lr_lat", rasterlrlat);
         results.put("depth", depth);
         results.put("query_success", true);
 

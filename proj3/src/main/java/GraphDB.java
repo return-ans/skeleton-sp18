@@ -215,7 +215,7 @@ public class GraphDB {
         nodes.get(id2).adjTo.add(id1);
     }
 
-    Node getNode(long id){
+    Node getNode(long id) {
         return nodes.get(id);
     }
 
@@ -238,6 +238,7 @@ public class GraphDB {
             adjTo = new HashSet<>();
             extraInfo = new HashMap<>();
         }
+
     }
 
     /**
