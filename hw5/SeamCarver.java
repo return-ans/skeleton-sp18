@@ -2,12 +2,14 @@ import edu.princeton.cs.algs4.Picture;
 
 public class SeamCarver {
     private double[][] energy;
+    Picture p;
     private int[][] color;
     private int[] flag;
     private int width;
     private int height;
 
     public SeamCarver(Picture picture) {
+        p = picture;
         int m = picture.height();
         int n = picture.width();
         color = new int[m][n];
@@ -19,17 +21,18 @@ public class SeamCarver {
     }
 
     public Picture picture() {
-        removeVerticalSeam(findHorizontalSeam());
-        Picture newPicture = new Picture(width(), height());
-        for (int i = 0; i < height(); i++) {
-            int idx = 0;
-            for (int j = 0; j < width(); j++) {
-                if (j != flag[i]) {
-                    newPicture.setRGB(idx++, i, color[i][j]);
-                }
-            }
-        }
-        return newPicture;
+//        removeVerticalSeam(findHorizontalSeam());
+//        Picture newPicture = new Picture(width(), height());
+//        for (int i = 0; i < height(); i++) {
+//            int idx = 0;
+//            for (int j = 0; j < width(); j++) {
+//                if (j != flag[i]) {
+//                    newPicture.setRGB(idx++, i, color[i][j]);
+//                }
+//            }
+//        }
+        SeamRemover sr = new SeamRemover();
+        return sr.removeVerticalSeam(p, findHorizontalSeam());
     }
 
     public int width() {
