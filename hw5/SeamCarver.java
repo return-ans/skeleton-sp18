@@ -1,7 +1,5 @@
 import edu.princeton.cs.algs4.Picture;
 
-import javax.swing.*;
-
 public class SeamCarver {
     private Picture pict;
     private double[][] energy;
@@ -10,12 +8,12 @@ public class SeamCarver {
 
     public SeamCarver(Picture picture) {
         pict = picture;
-        int m = pict.height();
-        int n = pict.width();
+        int m = picture.height();
+        int n = picture.width();
         color = new int[m][n];
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                color[i][j] = pict.getRGB(i, j);
+                color[i][j] = picture.getRGB(i, j);
             }
         }
     }
@@ -42,17 +40,17 @@ public class SeamCarver {
     }
 
     private int getR(int x, int y) {
-        int rgb = pict.getRGB(x, y);
+        int rgb = color[x][y];
         return (rgb >> 16) & 0xFF;
     }
 
     private int getG(int x, int y) {
-        int rgb = pict.getRGB(x, y);
+        int rgb = color[x][y];
         return (rgb >> 8) & 0xFF;
     }
 
     private int getB(int x, int y) {
-        int rgb = pict.getRGB(x, y);
+        int rgb = color[x][y];
         return (rgb >> 0) & 0xFF;
     }
 
