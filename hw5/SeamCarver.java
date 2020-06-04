@@ -1,13 +1,13 @@
 import edu.princeton.cs.algs4.Picture;
 
 public class SeamCarver {
-    private Picture pict;
     private double[][] energy;
     private int[][] color;
     private int[] flag;
+    private int width;
+    private int height;
 
     public SeamCarver(Picture picture) {
-        pict = picture;
         int m = picture.height();
         int n = picture.width();
         color = new int[m][n];
@@ -19,7 +19,8 @@ public class SeamCarver {
     }
 
     public Picture picture() {
-        Picture newPicture = new Picture(width() - 1, height());
+        removeVerticalSeam(findHorizontalSeam());
+        Picture newPicture = new Picture(width(), height());
         for (int i = 0; i < height(); i++) {
             int idx = 0;
             for (int j = 0; j < width(); j++) {
@@ -32,11 +33,11 @@ public class SeamCarver {
     }
 
     public int width() {
-        return pict.width();
+        return this.width;
     }
 
     public int height() {
-        return pict.height();
+        return this.height;
     }
 
     private int getR(int x, int y) {
@@ -215,10 +216,10 @@ public class SeamCarver {
     }
 
     public void removeVerticalSeam(int[] seam) {
-        int[] path = findVerticalSeam();
         flag = new int[height()];
         for (int i = 0; i < height(); i++) {
-            flag[i] = path[i];
+            flag[i] = seam[i];
         }
+        this.width--;
     }
 }
