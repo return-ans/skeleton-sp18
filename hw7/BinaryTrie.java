@@ -52,10 +52,11 @@ public class BinaryTrie {
 
         // initialize priority queue with singleton trees
         MinPQ<Node> pq = new MinPQ<Node>();
-        for (char c : freq.keySet())
-            if (freq.get(c) > 0)
+        for (char c : freq.keySet()) {
+            if (freq.get(c) > 0) {
                 pq.insert(new Node(c, freq.get(c), null, null));
-
+            }
+        }
         // merge two smallest trees
         while (pq.size() > 1) {
             Node left = pq.delMin();
@@ -90,16 +91,16 @@ public class BinaryTrie {
 
     }
 
-    static void dfs(Node root, String s) {
-        if (root.isLeaf()) {
-            lookUpTable.put(root.ch, new BitSequence(s));
+    static void dfs(Node cur, String s) {
+        if (cur.isLeaf()) {
+            lookUpTable.put(cur.ch, new BitSequence(s));
             return;
         }
-        if (root.left != null) {
-            dfs(root.left, s + "0");
+        if (cur.left != null) {
+            dfs(cur.left, s + "0");
         }
-        if (root.right != null) {
-            dfs(root.right, s + "1");
+        if (cur.right != null) {
+            dfs(cur.right, s + "1");
         }
     }
 
